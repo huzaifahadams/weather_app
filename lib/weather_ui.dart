@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:weather_app/more_info.dart';
 import 'package:weather_app/secrets.dart';
-
+import 'package:intl/intl.dart';
 import 'forecasts.dart';
 import 'package:http/http.dart' as http;
 
@@ -45,7 +45,7 @@ class _WeatherUiState extends State<WeatherUi> {
           actions: [
             IconButton(
               onPressed: () {
-                getCurrentWeather();
+                setState(() {});
               },
               icon: const Icon(Icons.refresh),
             )
@@ -131,20 +131,31 @@ class _WeatherUiState extends State<WeatherUi> {
                   const SizedBox(
                     height: 10,
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (int i = 0; i < 5; i++)
-                          const ForecastItem(
-                            time: '9:23',
-                            icon: Icons.cloud,
-                            temp: '44.3',
-                          ),
-                      ],
+
+                  SizedBox(
+                    height: 120,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: data['weather']
+                          .length, // Use the length of the 'weather' list
+                      itemBuilder: (context, index) {
+                        final hourlyForecast = data['weather'][index];
+                        print(hourlyForecast);
+
+                        final hourlySky = hourlyForecast['main'] == 'Clouds' ||
+                            hourlyForecast['main'] == 'Rain';
+                        final hourlyTemp = data['main']['temp'].toString();
+                        final time = DateTime.fromMillisecondsSinceEpoch(
+                            data['dt'] * 1000);
+
+                        return ForecastItem(
+                          time: DateFormat.Hm().format(time),
+                          icon: hourlySky ? Icons.cloud : Icons.sunny,
+                          temp: hourlyTemp,
+                        );
+                      },
                     ),
                   ),
-
                   const SizedBox(
                     height: 20,
                   ),

@@ -20,6 +20,8 @@ class ForecastItem extends StatelessWidget {
             Text(
               time,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(
               height: 8,
